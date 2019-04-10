@@ -103,6 +103,8 @@ class Contact{
   String phone;
   String img;
 
+  Contact();
+
   Contact.fromMap(Map map){
     id    = map[idColumn];
     name  = map[nameColumn];
@@ -117,7 +119,7 @@ class Contact{
       emailColumn:email,
       phoneColumn:phone,
       imgColumn:img
-    }
+    };
 
     if(id!=null){
       map[idColumn] = id;
