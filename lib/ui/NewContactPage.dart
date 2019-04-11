@@ -17,9 +17,11 @@ class _NewContactPageState extends State<NewContactPage> {
   Contact _editContact;
   bool _userEdited=false;
 
-  TextEditingController _nameController;
-  TextEditingController _emailController;
-  TextEditingController _phoneController;
+  final _nameController  = TextEditingController();
+  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
+
+  final _namedFocus = FocusNode();
 
   @override
   void initState() {
@@ -27,6 +29,7 @@ class _NewContactPageState extends State<NewContactPage> {
       _editContact = Contact();
     } else {
       _editContact = Contact.fromMap(widget.contact.toMap());
+
       _nameController.text   =  _editContact.name;
       _emailController.text  =  _editContact.email;
       _phoneController.text  =  _editContact.phone;
@@ -42,7 +45,13 @@ class _NewContactPageState extends State<NewContactPage> {
         backgroundColor: Colors.red,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          if(_editContact.name != null && _editContact.name.isNotEmpty){
+            Navigator.pop(context,_editContact);
+          }else{
+            FocusScope.of(context).requestFocus(_namedFocus);
+          }
+        },
         child: Icon(Icons.save),
         backgroundColor: Colors.red,
       ),
@@ -66,6 +75,7 @@ class _NewContactPageState extends State<NewContactPage> {
             ),
             TextField(
               controller: _nameController,
+              focusNode: _namedFocus,
               decoration: InputDecoration(labelText: "Nome:"),
               onChanged: (text){
                 _userEdited = true;
