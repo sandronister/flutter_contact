@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_contact/helpers/ContactHelpers.dart';
 import 'package:flutter_contact/ui/NewContactPage.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ContactPage extends StatefulWidget {
   @override
@@ -82,9 +83,67 @@ class _ContactPageState extends State<ContactPage> {
         ),
       ),
       onTap: (){
-        _showContactPage(contact:contacts[index]);
+        _showOptions(context,index);
       },
     );
+  }
+
+  void _showOptions(BuildContext context,int index){
+      showModalBottomSheet(
+          context: context,
+          builder: (context){
+            return BottomSheet(
+              onClosing: (){},
+              builder: (context){
+                return Container(
+                  padding: EdgeInsets.all(10.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: FlatButton(
+                            onPressed: (){
+                              launch('tel:${contacts[index].phone}');
+                            },
+                            child: Text("Ligar",
+                              style: TextStyle(color: Colors.red,fontSize: 20.0),
+                            )
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: FlatButton(
+                            onPressed: (){
+                              Navigator.pop(context);
+                              _showContactPage(contact: contacts[index]);
+                            },
+                            child: Text("Editar",
+                              style: TextStyle(color: Colors.red,fontSize: 20.0),
+                            )
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: FlatButton(
+                            onPressed: (){
+                              helper.deleteContact(contacts[index].id);
+                              setState(() {
+                                contacts.removeAt(index);
+                                Navigator.pop(context);
+                              });
+                            },
+                            child: Text("Excluir",
+                              style: TextStyle(color: Colors.red,fontSize: 20.0),
+                            )
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              },
+            );
+          });
   }
 
   void _getAllContact(){
