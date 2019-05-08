@@ -5,6 +5,8 @@ import 'package:flutter_contact/helpers/ContactHelpers.dart';
 import 'package:flutter_contact/ui/NewContactPage.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+enum Orderoptions {orderaz,orderza}
+
 class ContactPage extends StatefulWidget {
   @override
   _ContactPageState createState() => _ContactPageState();
@@ -30,6 +32,21 @@ class _ContactPageState extends State<ContactPage> {
       appBar: AppBar(
           title: Text('Contato'),
           centerTitle: true,
+          actions: <Widget>[
+            PopupMenuButton<Orderoptions>(
+              itemBuilder: (context)=><PopupMenuEntry<Orderoptions>>[
+                const PopupMenuItem(
+                    child: Text("Ordernar A-Z"),
+                    value: Orderoptions.orderaz,
+                ),
+                const PopupMenuItem(
+                  child: Text("Ordernar Z-A"),
+                  value: Orderoptions.orderza,
+                )
+              ],
+              onSelected: _orderList,
+            )
+          ],
           backgroundColor: Colors.red),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -151,6 +168,25 @@ class _ContactPageState extends State<ContactPage> {
       setState(() {
         contacts = list;
       });
+    });
+  }
+
+  void _orderList(Orderoptions result){
+    switch(result){
+      case Orderoptions.orderaz:
+          contacts.sort((a,b){
+            return a.name.toLowerCase().compareTo(b.name.toLowerCase());
+          });
+        break;
+      case Orderoptions.orderza:
+          contacts.sort((a,b){
+            return b.name.toLowerCase().compareTo(a.name.toLowerCase());
+          });
+        break;
+    }
+
+    setState(() {
+
     });
   }
 
